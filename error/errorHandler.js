@@ -14,7 +14,7 @@ const errorHandler = (error, req, res, next) => {
       statusCode: error.statusCode,
     });
   }
-
+  console.log("error======> ", error);
   res.status(500).send("Something went wrong");
 };
 

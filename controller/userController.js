@@ -32,11 +32,8 @@ const create = tryCatch(async (req, res) => {
   }
 
   const devRole = await Role.findOne({ name: role });
+  const adminRole = await Role.findOne({ name: "ADMIN" });
   const dept = await Department.findOne({ name: department });
-  const salary = await Salary.findOne({
-    yearsOfExp: Number(yearsOfExp),
-    role_id: devRole._id,
-  });
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -47,12 +44,18 @@ const create = tryCatch(async (req, res) => {
   newUser.password = hashedPassword;
   newUser.mobile = mobile;
   newUser.gender = gender;
-  newUser.role_id = devRole._id;
+  // newUser.role_id = devRole._id;
+  newUser.role_id.push(devRole._id);
+  newUser.role_id.push(adminRole._id);
   newUser.department_id = dept._id;
   newUser.dateOfJoining = dateOfJoining;
-  newUser.salary_id = salary._id;
+  // newUser.salary_id = salary._id;
   await newUser.save();
-  res.status(201).send(new ApiResponse(201, newUser._id, "", true, 1, []));
+  res
+    .status(201)
+    .send(
+      new ApiResponse(201, newUser._id, "Created Successfully", true, 1, [])
+    );
 });
 
 // get user by id
@@ -69,4 +72,16 @@ const getById = tryCatch(async (req, res, next) => {
   res.status(200).send(new ApiResponse(200, user._id, "", true, 1, [user]));
 });
 
-module.exports = { create, getById };
+// get all
+const getAll = tryCatch(async (req, res, next) => {
+  const users = await User.find()
+    .populate("role_id")
+    .populate("department_id")
+    .select("-password");
+
+  res
+    .status(200)
+    .send(new ApiResponse(200, null, "", true, users.length, users));
+});
+
+module.exports = { create, getById, getAll };

@@ -4,7 +4,7 @@ const departmentSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      enum: ["IT", "OPRATIONS", "HR", "ADMIN", "ACCOUNTS"],
+      enum: ["IT", "OP", "HR", "ADMIN", "ACCOUNTS"],
       maxLength: 50,
       required: true,
     },

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      maxLength: 100,
+      maxLength: 200,
       required: true,
     },
     mobile: {
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
     role_id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Role",
       required: true,
       populate: true,
@@ -48,12 +48,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       populate: true,
     },
-    salary_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Salary",
-      required: true,
-      populate: true,
-    },
+    // salary_id: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Salary",
+    //   required: true,
+    //   populate: true,
+    // },
     gender: {
       type: String,
       enum: ["MALE", "FEMALE", "OTHER"],

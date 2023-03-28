@@ -36,30 +36,28 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    role_id: {
-      type: [mongoose.Schema.Types.ObjectId],
+    role: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
       required: true,
       populate: true,
     },
-    department_id: {
+    department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Department",
       required: true,
       populate: true,
     },
-    // salary_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Salary",
-    //   required: true,
-    //   populate: true,
-    // },
     gender: {
       type: String,
       enum: ["MALE", "FEMALE", "OTHER"],
     },
     dateOfJoining: {
       type: Date,
+      required: true,
+    },
+    yearsOfExperience: {
+      type: Number,
       required: true,
     },
   },

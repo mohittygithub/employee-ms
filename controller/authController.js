@@ -10,13 +10,13 @@ const login = tryCatch(async (req, res, next) => {
 
   const existingUser = await User.findOne({ email: email });
 
-  if (!existingUser) throw new AppError("Incorrect Username/Password 1", 400);
+  if (!existingUser) throw new AppError("Incorrect Username/Password", 400);
 
   const isPasswordCorrect = await bcrypt.compare(
     password,
     existingUser.password
   );
-  if (!isPasswordCorrect) throw new AppError("Incorrect Password 2", 400);
+  if (!isPasswordCorrect) throw new AppError("Incorrect Password", 400);
 
   let token = jwt.sign(
     {

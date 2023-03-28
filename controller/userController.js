@@ -5,7 +5,6 @@ const { tryCatch } = require("../util/tryCatch");
 const AppError = require("../error/AppError");
 const ApiResponse = require("../util/ApiResponse.");
 const Department = require("../model/department");
-const Salary = require("../model/salary");
 
 // create new user
 const create = tryCatch(async (req, res) => {
@@ -16,10 +15,10 @@ const create = tryCatch(async (req, res) => {
     password,
     mobile,
     gender,
-    role,
-    department,
+    roleId,
+    departmentId,
     dateOfJoining,
-    yearsOfExp,
+    yearsOfExperience,
   } = req.body;
 
   if (!lastName || !email || !password) {
@@ -31,9 +30,8 @@ const create = tryCatch(async (req, res) => {
     throw new AppError("Email exists", 400);
   }
 
-  const devRole = await Role.findOne({ name: role });
-  const adminRole = await Role.findOne({ name: "ADMIN" });
-  const dept = await Department.findOne({ name: department });
+  const role = await Role.findById({ _id: roleId });
+  const dept = await Department.findById({ _id: departmentId });
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -44,13 +42,12 @@ const create = tryCatch(async (req, res) => {
   newUser.password = hashedPassword;
   newUser.mobile = mobile;
   newUser.gender = gender;
-  // newUser.role_id = devRole._id;
-  newUser.role_id.push(devRole._id);
-  newUser.role_id.push(adminRole._id);
-  newUser.department_id = dept._id;
+  newUser.role = role._id;
+  newUser.department = dept._id;
   newUser.dateOfJoining = dateOfJoining;
-  // newUser.salary_id = salary._id;
+  newUser.yearsOfExperience = yearsOfExperience;
   await newUser.save();
+
   res
     .status(201)
     .send(
@@ -62,9 +59,8 @@ const create = tryCatch(async (req, res) => {
 const getById = tryCatch(async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id)
-    .populate("role_id")
-    .populate("department_id")
-    .populate("salary_id")
+    .populate("role")
+    .populate("department")
     .select("-password");
   if (!user) {
     throw new AppError("User Not Found", 400);
@@ -75,8 +71,8 @@ const getById = tryCatch(async (req, res, next) => {
 // get all
 const getAll = tryCatch(async (req, res, next) => {
   const users = await User.find()
-    .populate("role_id")
-    .populate("department_id")
+    .populate("role")
+    .populate("department")
     .select("-password");
 
   res

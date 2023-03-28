@@ -4,9 +4,9 @@ const { create, getById, getAll } = require("../controller/userController");
 const { auth, admin } = require("../middleware/protected");
 const router = express.Router();
 
-router.post("/", create);
 router.post("/authenticate", login);
-router.get("/", auth, admin, getAll);
-router.get("/:id", getById);
+router.post("/", auth, admin, create);
+router.get("/", getAll);
+router.get("/:id", auth, getById);
 
 module.exports = router;

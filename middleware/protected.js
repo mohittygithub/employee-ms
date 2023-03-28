@@ -27,12 +27,12 @@ const auth = async (req, res, next) => {
 const admin = async (req, res, next) => {
   try {
     const user = await User.findById({ _id: req.userId })
-      .populate("role_id")
+      .populate("role")
       .select("-password");
 
-    if (!user.role_id.find((role) => role.name === "ADMIN")) {
+    if (!user.role.name === "ADMIN") {
       return res.status(404).json({
-        error: "You are not allowed to access this resource.",
+        error: "This role type has no access to this resource.",
         statusCode: 404,
       });
     }
